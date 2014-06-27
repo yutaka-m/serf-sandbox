@@ -1,0 +1,62 @@
+---
+default:
+  suite:
+    attributes:
+      notify: &default-suite-attributes-notify
+        url: ""
+        rid: ""
+
+driver:
+  name: vagrant
+
+provisioner:
+  name: chef_solo
+
+platforms:
+  - name: ubuntu-12.04
+
+suites:
+  - name: dns1
+    run_list:
+      - recipe[serf::default]
+    attributes:
+      address: 10.0.0.5
+      serf_role: dns
+      notify:
+        <<: *default-suite-attributes-notify
+    driver_config:
+      network:
+      - ["private_network", {ip: "10.0.0.5"}]
+  - name: ws1
+    run_list:
+      - recipe[serf::default]
+    attributes:
+      address: 10.0.0.6
+      serf_role: ws1
+      notify:
+        <<: *default-suite-attributes-notify
+    driver_config:
+      network:
+      - ["private_network", {ip: "10.0.0.6"}]
+  - name: ws2
+    run_list:
+      - recipe[serf::default]
+    attributes:
+      address: 10.0.0.7
+      serf_role: ws2
+      notify:
+        <<: *default-suite-attributes-notify
+    driver_config:
+      network:
+      - ["private_network", {ip: "10.0.0.7"}]
+  - name: proxy1
+    run_list:
+      - recipe[serf::default]
+    attributes:
+      address: 10.0.0.8
+      serf_role: proxy1
+      notify:
+        <<: *default-suite-attributes-notify
+    driver_config:
+      network:
+      - ["private_network", {ip: "10.0.0.8"}]

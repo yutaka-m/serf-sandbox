@@ -1,0 +1,13 @@
+description "Serf agent"
+
+start on runlevel [2345]
+stop on runlevel [!2345]
+
+exec /usr/local/bin/serf agent \
+    -bind=<%= node["address"] %> \
+    -event-handler "member-join=RID=<%= node['notify']['rid'] %> URL=<%= node['notify']['url'] %> /opt/serf/common/serf-member-join.sh" \
+    -event-handler "member-leave,member-failed=RID=<%= node['notify']['rid'] %> URL=<%= node['notify']['url'] %> /opt/serf/common/serf-member-leave.sh" \
+    -event-handler "query:load=uptime" \
+    -event-handler "user:deploy=RID=<%= node['notify']['rid'] %> URL=<%= node['notify']['url'] %> /opt/serf/common/serf-user-deploy.sh" \
+    -tag role=<%= node["serf_role"] %> >>/var/log/serf.log 2>&1
+
